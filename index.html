@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Truth Test</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      background: radial-gradient(circle at top, #020617, #000000);
+      color: white;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 520px;
+      background: rgba(15, 23, 42, 0.92);
+      padding: 38px;
+      border-radius: 22px;
+      text-align: center;
+      box-shadow: 0 0 55px rgba(0,0,0,0.75);
+      position: relative;
+    }
+
+    .main-title {
+      font-size: 34px;
+      font-weight: bold;
+      margin-bottom: 6px;
+    }
+
+    .sub-title {
+      font-size: 14px;
+      opacity: 0.7;
+      margin-bottom: 30px;
+    }
+
+    #question {
+      font-size: 19px;
+      margin-bottom: 30px;
+      min-height: 55px;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 18px;
+    }
+
+    button {
+      flex: 1;
+      padding: 15px;
+      font-size: 17px;
+      border: none;
+      border-radius: 14px;
+      cursor: pointer;
+    }
+
+    .yes {
+      background: #22c55e;
+      color: black;
+    }
+
+    .no {
+      background: #dc2626;
+      color: white;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    #finalCard {
+      margin-top: 20px;
+      padding: 30px;
+      border-radius: 22px;
+      animation: fadeIn 0.7s ease;
+    }
+
+    .fail {
+      background: radial-gradient(circle at top, #3f0d0d, #020617);
+      box-shadow: 0 0 48px rgba(220,38,38,0.6);
+    }
+
+    .success {
+      background: radial-gradient(circle at top, #022c22, #020617);
+      box-shadow: 0 0 48px rgba(34,197,94,0.55);
+    }
+
+    #finalTitle {
+      font-size: 26px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      letter-spacing: 0.5px;
+    }
+
+    #finalSubtitle {
+      font-size: 16px;
+      opacity: 0.95;
+      margin-bottom: 14px;
+    }
+
+    .quote {
+      font-size: 15px;
+      opacity: 0.85;
+      font-style: italic;
+      margin-top: 10px;
+      line-height: 1.5;
+    }
+
+    #reasonList {
+      text-align: left;
+      padding-left: 24px;
+      font-size: 16px;
+    }
+
+    #reasonList li {
+      margin-bottom: 10px;
+      color: #f87171;
+      font-weight: bold;
+    }
+
+    .disclaimer {
+      margin-top: 26px;
+      font-size: 11px;
+      opacity: 0.45;
+      font-style: italic;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: scale(0.92);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="main-title">The Truth Test</div>
+    <div class="sub-title">Answer honestly no filters no excuses</div>
+
+    <p id="question"></p>
+
+    <div class="buttons" id="buttons">
+      <button class="yes" onclick="answer('yes')">Yes</button>
+      <button class="no" onclick="answer('no')">No</button>
+    </div>
+
+    <div id="finalCard" class="hidden">
+      <div id="finalTitle"></div>
+      <div id="finalSubtitle"></div>
+      <div class="quote" id="finalQuote"></div>
+      <ul id="reasonList"></ul>
+    </div>
+
+    <div class="disclaimer">
+      * Just for fun This quiz is not serious like movie warnings
+    </div>
+  </div>
+
+  <script>
+    const questions = [
+      { text: "Have you quit smoking", reason: "you said you are still smoking" },
+      { text: "Have you quit chai or tea", reason: "you are still addicted to chai or tea" },
+      { text: "Are you sleeping early", reason: "you are not sleeping early" },
+      { text: "Are you making your day productive", reason: "your day is not productive" },
+      { text: "Are you wasting your time like you used to do", reason: "you are still wasting your time" },
+      { text: "Have you quit junk food", reason: "you still eat junk food" },
+      { text: "Did you confession", reason: "you did not confession" },
+      { text: "Are you happy now", reason: "you are not happy with your life" }
+    ]
+
+    let currentIndex = 0
+    let noReasons = []
+
+    const questionEl = document.getElementById("question")
+    const buttonsEl = document.getElementById("buttons")
+    const finalCard = document.getElementById("finalCard")
+    const finalTitle = document.getElementById("finalTitle")
+    const finalSubtitle = document.getElementById("finalSubtitle")
+    const finalQuote = document.getElementById("finalQuote")
+    const reasonList = document.getElementById("reasonList")
+
+    function showQuestion() {
+      questionEl.innerText = questions[currentIndex].text
+    }
+
+    showQuestion()
+
+    function answer(value) {
+      if (value === "no") {
+        noReasons.push(questions[currentIndex].reason)
+      }
+
+      currentIndex++
+
+      if (currentIndex < questions.length) {
+        showQuestion()
+      } else {
+        finishQuiz()
+      }
+    }
+
+    function finishQuiz() {
+      questionEl.innerText = ""
+      buttonsEl.style.display = "none"
+      finalCard.classList.remove("hidden")
+
+      if (noReasons.length > 0) {
+        finalCard.classList.add("fail")
+        finalTitle.innerText = "Quit life"
+        finalSubtitle.innerText = "You still have work to do"
+
+        noReasons.forEach(reason => {
+          const li = document.createElement("li")
+          li.innerText = reason
+          reasonList.appendChild(li)
+        })
+      } else {
+        finalCard.classList.add("success")
+        finalTitle.innerText = "Well done"
+        finalSubtitle.innerText = "You chose discipline over comfort"
+
+        finalQuote.innerText =
+          "Small daily decisions create massive life change Keep choosing what is hard today for an easier tomorrow"
+      }
+    }
+  </script>
+
+</body>
+</html>
